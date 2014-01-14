@@ -28,7 +28,7 @@ class FacebookConnect{
 
   			$info = $facebook->api('/me');
 
-  			$token = str_shuffle(uniqid());
+  			$token = md5(uniqid());
   			$fname = $info['first_name'];
   			$lname = $info['last_name'];
   			$email = $info['email'];
@@ -40,7 +40,7 @@ class FacebookConnect{
 
   			if($match = $query->fetch(PDO::FETCH_ASSOC)){
   				echo '<br>Token du compte FB';
-  				var_dump($match['token']);
+  	
   			}else{
   				$query = $bdd->prepare('INSERT INTO users (name, firstname, email, token) VALUES (:name, :firstname, :email, :token) ');
   				$query->bindParam(':name', $lname);

@@ -41,19 +41,24 @@ class Api{
 		}
 	}
 
-	public static function right(){
+	public static function right($right_default = 0){
 		/*$httpHOST 	= $_SERVER['HTTP_HOST'];
 		$httpURL 	= $_SERVER['REQUEST_URI'];
 		$baseUrl 	= $httpHOST.$httpURL;*/
 		$tokenAccess = $_REQUEST['token_access'];
-		var_dump($tokenAccess);
+
 		global $bdd;
   		$query = $bdd->prepare('SELECT * FROM users WHERE token=?');
   		$query->execute(array($tokenAccess));
   		if($match = $query->fetch(PDO::FETCH_ASSOC)){
-  			echo 'ok';
+  			$right = $match['right'];
+  			if($right < $right_default){
+  				Api::response(400, array('error'=>'Accés Refusé'));
+  				die();
+  			}
   		}else{
-  			echo 'token invalide';
+  			Api::response(400, array('error'=>'Token Invalide'));
+  			die();
   		}
 	}
 }
