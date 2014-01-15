@@ -28,7 +28,7 @@ class FacebookConnect{
 
   			$info = $facebook->api('/me');
 
-  			$token = md5(uniqid());
+  			$token = Api::tokenGenerator();
   			$fname = $info['first_name'];
   			$lname = $info['last_name'];
   			$email = $info['email'];
@@ -39,14 +39,13 @@ class FacebookConnect{
   			// $match = $query->fetchAll(PDO::FETCH_ASSOC);
 
   			if($match = $query->fetch(PDO::FETCH_ASSOC)){
-  				echo '<br>Token du compte FB';
-  	
+                Api::response(200, array('Token de votre compte : ' . $match['token']));
   			}else{
   				$query = $bdd->prepare('INSERT INTO users (name, firstname, email, token) VALUES (:name, :firstname, :email, :token) ');
-  				$query->bindParam(':name', $lname);
-  				$query->bindParam(':firstname', $fname);
-  				$query->bindParam(':email', $email);
-  				$query->bindParam(':token', $token);
+  				$query->bindParam(':name', $lname, PDO::PARAM_STR);
+  				$query->bindParam(':firstname', $fname, PDO::PARAM_STR);
+  				$query->bindParam(':email', $email, PDO::PARAM_STR);
+  				$query->bindParam(':token', $token, PDO::PARAM_STR);
   				$query->execute();
   			}
 

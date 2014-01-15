@@ -19,6 +19,7 @@ class Api{
 		}
 
 		print json_encode($response);
+		die();
 	}
 
 	private static function status($code){
@@ -33,6 +34,10 @@ class Api{
 
 			case 404:
 				return $status = $code . 'Not Found';
+				break;
+
+			case 405:
+				return $status = $code . 'Method Not Allowed';
 				break;
 			
 			default:
@@ -51,14 +56,42 @@ class Api{
   		$query = $bdd->prepare('SELECT * FROM users WHERE token=?');
   		$query->execute(array($tokenAccess));
   		if($match = $query->fetch(PDO::FETCH_ASSOC)){
-  			$right = $match['right'];
-  			if($right < $right_default){
-  				Api::response(400, array('error'=>'Accés Refusé'));
-  				die();
+  			$usergroup = $match['usergroup'];
+  			if($usergroup < $right_default){
+  				self::response(400, array('error'=>'Accés Refusé'));
   			}
   		}else{
-  			Api::response(400, array('error'=>'Token Invalide'));
-  			die();
+  			self::response(400, array('error'=>'Token Invalide'));
   		}
 	}
+
+
+	public static function tokenGenerator(){
+		$myToken = md5(uniqid());
+		global $bdd;
+		$query = $bdd->prepare('SELECT * FROM users WHERE token=?');
+		$query->execute(array($myToken));
+		
+		if($query->fetch()){
+			$myToken = self::tokenGenerator();
+		}
+
+		return $myToken;
+	}
+
+
+	public static function findUserById($id){
+		global $bdd;
+  		$query = $bdd->prepare('SELECT * FROM users WHERE id=?');
+  		$query->execute(array($id));
+
+  		return $query->fetch(PDO::FETCH_ASSOC);
+	}
+
+
+	public static function badRequest(){
+		self::response(405, array('error' => 'Method Not Allowed'));
+	}
+
+
 }
