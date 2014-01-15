@@ -13,15 +13,18 @@ class UsersController{
 
 		global $bdd;
   		$query = $bdd->query('SELECT * FROM users');
-  		$query->execute();
 
-  		$allUser = $query->fetchAll(PDO::FETCH_ASSOC);
-		Api::response(200, array($allUser));
+  		if($query->execute()){
+  			$allUser = $query->fetchAll(PDO::FETCH_ASSOC);
+			Api::response(200, array($allUser));
+  		}else{
+			Api::response(400, array('error' => 'Erreur lors du chargement des donnees'));
+		}
 	}
 
 
 	public function listUserbyID(){
-  		$user = Api::findUserById($param = F3::get('PARAMS.id'));
+  		$user = Api::findById('users', $param = F3::get('PARAMS.id'));
   			/*$param = F3::get('PARAMS.id');
 			global $bdd;
   			$query = $bdd->prepare('SELECT * FROM users WHERE id=?');
@@ -50,35 +53,39 @@ class UsersController{
 
   		global $bdd;
   		$query = $bdd->prepare('SELECT * FROM users WHERE email=?');
-  		$query->execute(array($email));
 
-  		if($query->fetch(PDO::FETCH_ASSOC)){
+  		if($query->execute(array($email))){
+  			if($query->fetch(PDO::FETCH_ASSOC)){
                 Api::response(400, array('error' => 'email deja utilise'));
+  			}else{
+  				$query = $bdd->prepare('INSERT INTO users(firstname, name, email, token, usergroup) VALUES(:firstname, :name, :email, :token, :usergroup)');
+  				$query->bindParam(':firstname', $fname, 		PDO::PARAM_STR);
+  				$query->bindParam(':name', 		$lname, 		PDO::PARAM_STR);
+  				$query->bindParam(':email', 	$email, 		PDO::PARAM_STR);
+  				$query->bindParam(':token', 	$tokenVerif, 	PDO::PARAM_STR);
+  				$query->bindParam(':usergroup', $usergroup, 	PDO::PARAM_INT);
+	
+  				/*$query->execute(array(
+  					'firstname' => $fname,
+					'name' => $lname,
+					'email' => $email,
+					'token' => $tokenVerif,
+					'usergroup' => $usergroup
+  				));*/
+	
+				if($query->execute()){
+					Api::response(200, array('Utilisateur enregistrer'));
+				}
+			}  			
   		}else{
-  			$query = $bdd->prepare('INSERT INTO users(firstname, name, email, token, usergroup) VALUES(:firstname, :name, :email, :token, :usergroup)');
-  			$query->bindParam(':firstname', $fname, 		PDO::PARAM_STR);
-  			$query->bindParam(':name', 		$lname, 		PDO::PARAM_STR);
-  			$query->bindParam(':email', 	$email, 		PDO::PARAM_STR);
-  			$query->bindParam(':token', 	$tokenVerif, 	PDO::PARAM_STR);
-  			$query->bindParam(':usergroup', $usergroup, 	PDO::PARAM_INT);
-	
-  			/*$query->execute(array(
-  				'firstname' => $fname,
-				'name' => $lname,
-				'email' => $email,
-				'token' => $tokenVerif,
-				'usergroup' => $usergroup
-  			));*/
-	
-			if($query->execute()){
-				Api::response(200, array('Utilisateur enregistrer'));
-			}
-		}
+			Api::response(400, array('error' => 'Erreur lors du chargement des donnees'));
+  		}
+
 	}
 
 
 	public function updateUser(){
-		$user = Api::findUserById($param = F3::get('PARAMS.id'));
+		$user = Api::findById('users', $param = F3::get('PARAMS.id'));
 
 		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
   			Api::right(1);
@@ -95,24 +102,29 @@ class UsersController{
 
 		global $bdd;
 		$query = $bdd->prepare('SELECT * FROM users WHERE email=? && id!=?');
-  		$query->execute(array($email, $param));
 
-  		if($query->fetch(PDO::FETCH_ASSOC)){
+  		if($query->execute(array($email, $param))){
+  			if($query->fetch(PDO::FETCH_ASSOC)){
                 Api::response(400, array('error' => 'email deja utilise'));
-  		}else{
-  			$userId = $user['id'];
-			$query = $bdd->prepare('UPDATE users SET firstname=:firstname, name=:name, email=:email, usergroup=:usergroup WHERE id=:id ');
-			$query->bindParam(':firstname', $fname, 	PDO::PARAM_STR);
-  			$query->bindParam(':name', 		$lname, 	PDO::PARAM_STR);
-  			$query->bindParam(':email', 	$email, 	PDO::PARAM_STR);
-  			$query->bindParam(':usergroup', $usergroup, PDO::PARAM_INT);
-  			$query->bindParam(':id', 		$userId, 	PDO::PARAM_INT);
-  			//$arrayUpdate = array('firstname' => $fname, 'name' => $lname, 'email' => $email, 'usergroup' => $usergroup);
+  			}else{
+  				$userId = $user['id'];
+				$query = $bdd->prepare('UPDATE users SET firstname=:firstname, name=:name, email=:email, usergroup=:usergroup WHERE id=:id ');
+				$query->bindParam(':firstname', $fname, 	PDO::PARAM_STR);
+  				$query->bindParam(':name', 		$lname, 	PDO::PARAM_STR);
+  				$query->bindParam(':email', 	$email, 	PDO::PARAM_STR);
+  				$query->bindParam(':usergroup', $usergroup, PDO::PARAM_INT);
+  				$query->bindParam(':id', 		$userId, 	PDO::PARAM_INT);
+  				//$arrayUpdate = array('firstname' => $fname, 'name' => $lname, 'email' => $email, 'usergroup' => $usergroup);
   			
-  			if($query->execute()){
-				Api::response(200, array('Utilisateur ' .$user['firstname']. ' mis a jour'));
-			}
-		}	
+  				if($query->execute()){
+					Api::response(200, array('Utilisateur ' .$fname. ' mis a jour'));
+				}
+			}  			
+  		}else{
+			Api::response(400, array('error' => 'Erreur lors du chargement des donnees'));
+  		}
+
+	
 	}
 
 
@@ -121,13 +133,13 @@ class UsersController{
 		global $bdd;
 		$query = $bdd->prepare('DELETE FROM users');
 		if($query->execute()){
-			Api::response(200, array('Tous les utiliateurs ont ete supprime'));
+			Api::response(200, array('Tous les utilisateurs ont ete supprimes'));
 		}
 	}
 
 
 	public function deleteUserbyID(){
-		$user = Api::findUserById($param = F3::get('PARAMS.id'));
+		$user = Api::findById('users', $param = F3::get('PARAMS.id'));
 
 		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
   			Api::right(1);

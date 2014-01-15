@@ -61,7 +61,9 @@ class Api{
   				self::response(400, array('error'=>'Accés Refusé, niveau de droit insuffisant'));
   			}
   		}else{
-  			self::response(400, array('error'=>'Token Invalide'));
+  			if($right_default != 0){
+  				self::response(400, array('error'=>'Token Invalide'));
+  			}
   		}
 	}
 
@@ -80,9 +82,9 @@ class Api{
 	}
 
 
-	public static function findUserById($id){
+	public static function findById($table, $id){
 		global $bdd;
-  		$query = $bdd->prepare('SELECT * FROM users WHERE id=?');
+  		$query = $bdd->prepare('SELECT * FROM ' . $table . ' WHERE id=?');
   		$query->execute(array($id));
 
   		return $query->fetch(PDO::FETCH_ASSOC);
