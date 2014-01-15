@@ -58,7 +58,7 @@ class Api{
   		if($match = $query->fetch(PDO::FETCH_ASSOC)){
   			$usergroup = $match['usergroup'];
   			if($usergroup < $right_default){
-  				self::response(400, array('error'=>'Accés Refusé'));
+  				self::response(400, array('error'=>'Accés Refusé, niveau de droit insuffisant'));
   			}
   		}else{
   			self::response(400, array('error'=>'Token Invalide'));

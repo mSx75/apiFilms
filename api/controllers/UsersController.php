@@ -21,16 +21,21 @@ class UsersController{
 
 
 	public function listUserbyID(){
-		Api::right(2);
-		$user = Api::findUserById($param = F3::get('PARAMS.id'));
-		/*$param = F3::get('PARAMS.id');
-		global $bdd;
-  		$query = $bdd->prepare('SELECT * FROM users WHERE id=?');
-  		$query->execute(array($param));
+  		$user = Api::findUserById($param = F3::get('PARAMS.id'));
+  			/*$param = F3::get('PARAMS.id');
+			global $bdd;
+  			$query = $bdd->prepare('SELECT * FROM users WHERE id=?');
+  			$query->execute(array($param));
+  			$user = $query->fetch(PDO::FETCH_ASSOC);*/
+		
+  		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
+  			Api::right(1);
+  		}else{
+  			Api::right(2);
+  		}
 
-  		$user = $query->fetch(PDO::FETCH_ASSOC);*/
+  		Api::response(200, array($user));
   		
-		Api::response(200, array($user));
 	}
 
 
@@ -73,8 +78,14 @@ class UsersController{
 
 
 	public function updateUser(){
-		Api::right(2);
 		$user = Api::findUserById($param = F3::get('PARAMS.id'));
+
+		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
+  			Api::right(1);
+  		}else{
+  			Api::right(2);
+  		}
+
 		$data = Put::get();
 
 		$fname 		= ( isset($data['firstname']) ) 	?	$data['firstname'] 	:	$user['firstname'];
@@ -116,8 +127,13 @@ class UsersController{
 
 
 	public function deleteUserbyID(){
-		Api::right(2);
 		$user = Api::findUserById($param = F3::get('PARAMS.id'));
+
+		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
+  			Api::right(1);
+  		}else{
+  			Api::right(2);
+  		}
 
 		global $bdd;
 		$userId = $user['id'];
