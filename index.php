@@ -16,4 +16,10 @@ $f3->route('GET /',
 	}
 );
 
+$f3->route('GET /v1',
+	function($f3) {
+		require 'home.php';
+	}
+);
+
 $f3->run();

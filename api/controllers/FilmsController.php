@@ -116,7 +116,7 @@ class FilmsController{
 
 	public function filmLike(){
 		Perm::right(1);
-		Action::filmsAction(1, 'Like');
+		Action::filmsAction(1, 'Liked');
 	}
 
 
@@ -128,19 +128,25 @@ class FilmsController{
 
 	public function filmWantToWatch(){
 		Perm::right(1);
-		Action::filmsAction(3, 'Want to Watch');
+		Action::filmsAction(3, 'Wanted Watch');
 	}
 
 
 	public function deleteFilmLike(){
 		Perm::right(1);
-		Action::deleteFilmsAction(1, 'Like');
+		Action::deleteFilmsAction(1, 'Liked');
+	}
+
+
+	public function deleteFilmLike(){
+		Perm::right(1);
+		Action::deleteFilmsAction(2, 'Watched');
 	}
 
 
 	public function deleteFilmWantToWatch(){
 		Perm::right(1);
-		Action::deleteFilmsAction(3, 'Want to Watch');
+		Action::deleteFilmsAction(3, 'Wanted Watch');
 	}
 
 

@@ -122,7 +122,6 @@ class UsersController{
 
 
 
-
 	public function filmUserLike(){
 		Action::listFilmsByUser(1);
 	}

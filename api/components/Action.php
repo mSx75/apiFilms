@@ -79,6 +79,7 @@ class Action{
 	}
 
 
+
 	public static function listFilmsByUser($stat){
 		Perm::rightSwitch($user = self::findById('users', F3::get('PARAMS.id')));
 		$status = $stat;

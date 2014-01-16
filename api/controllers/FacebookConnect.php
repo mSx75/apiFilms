@@ -15,9 +15,9 @@ class FacebookConnect{
   		);
 
   		$facebook = new Facebook($config);
-
-  		$login = $facebook->getloginUrl(array("scope" => "email",  "display" => "popup"));
-  		echo '<a href=" '.$login.' ">Connection</a>';
+        $facebook->getloginUrl(array("scope" => "email",  "display" => "popup"));
+  		// $login = $facebook->getloginUrl(array("scope" => "email",  "display" => "popup"));
+  		// echo '<a href=" '.$login.' ">Connection</a>';
 
   		$session = $facebook->getUser();
 
