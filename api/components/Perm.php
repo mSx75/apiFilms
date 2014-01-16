@@ -8,6 +8,10 @@
 			$baseUrl 	= $httpHOST.$httpURL;*/
 			$tokenAccess = $_REQUEST['token_access'];
 
+			if(!isset($tokenAccess)){
+				Api::response(405, array('error' => 'Method Not Allowed'));
+			}
+
 			global $bdd;
   			$query = $bdd->prepare('SELECT * FROM users WHERE token=?');
   			$query->execute(array($tokenAccess));

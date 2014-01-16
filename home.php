@@ -7,9 +7,9 @@
 	body{font-family: arial; font-size: 1em;}
 	.wrap{margin:0 auto; width:100%; padding:70px 0;}
 	.container{margin:0 auto; width:1024px;}
-	.backdark{background: #eee;}
-	.fb{width:270px; margin:100px auto 0 auto;}
-	h1{text-align: center; font-size:3em; color:#333;}
+	.backdark{background: #222; border-bottom:10px solid #eee;}
+	.fb{width:270px; margin:70px auto 0 auto;}
+	h1{text-align: center; font-size:3em; color:#eee;}
 	a{padding:20px 50px;  background-color:#3B5998; text-decoration: none; color:#fff;}
 	</style>
 </head>
@@ -19,7 +19,7 @@
  ?>
  <div class="wrap backdark">
  	<div class="container">
- 		<h1>ApiFilm</h1>
+ 		<h1>ApiFilms</h1>
  	</div>
  </div>
  <div class="wrap">
