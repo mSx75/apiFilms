@@ -9,7 +9,7 @@ class UsersController{
 
 
 	public function listAllUsers(){
-		Api::right(2);
+		Perm::right(2);
 
 		global $bdd;
   		$query = $bdd->query('SELECT * FROM users');
@@ -24,26 +24,20 @@ class UsersController{
 
 
 	public function listUserbyID(){
-  		$user = Api::findById('users', $param = F3::get('PARAMS.id'));
-  			/*$param = F3::get('PARAMS.id');
-			global $bdd;
-  			$query = $bdd->prepare('SELECT * FROM users WHERE id=?');
-  			$query->execute(array($param));
-  			$user = $query->fetch(PDO::FETCH_ASSOC);*/
+  		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
 		
   		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
-  			Api::right(1);
+  			Perm::right(1);
   		}else{
-  			Api::right(2);
+  			Perm::right(2);
   		}
 
   		Api::response(200, array($user));
-  		
 	}
 
 
 	public function createUser(){
-		Api::right(2);
+		Perm::right(2);
 
 		$tokenVerif = Api::tokenGenerator();
   		( isset($_POST['firstname']) ) 	? $fname 		= $_POST['firstname'] 	: Api::response(400, array('error' => 'Veuillez rentrer un prenom')); 
@@ -65,14 +59,6 @@ class UsersController{
   				$query->bindParam(':token', 	$tokenVerif, 	PDO::PARAM_STR);
   				$query->bindParam(':usergroup', $usergroup, 	PDO::PARAM_INT);
 	
-  				/*$query->execute(array(
-  					'firstname' => $fname,
-					'name' => $lname,
-					'email' => $email,
-					'token' => $tokenVerif,
-					'usergroup' => $usergroup
-  				));*/
-	
 				if($query->execute()){
 					Api::response(200, array('Utilisateur enregistrer'));
 				}
@@ -85,12 +71,12 @@ class UsersController{
 
 
 	public function updateUser(){
-		$user = Api::findById('users', $param = F3::get('PARAMS.id'));
+		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
 
 		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
-  			Api::right(1);
+  			Perm::right(1);
   		}else{
-  			Api::right(2);
+  			Perm::right(2);
   		}
 
 		$data = Put::get();
@@ -114,7 +100,6 @@ class UsersController{
   				$query->bindParam(':email', 	$email, 	PDO::PARAM_STR);
   				$query->bindParam(':usergroup', $usergroup, PDO::PARAM_INT);
   				$query->bindParam(':id', 		$userId, 	PDO::PARAM_INT);
-  				//$arrayUpdate = array('firstname' => $fname, 'name' => $lname, 'email' => $email, 'usergroup' => $usergroup);
   			
   				if($query->execute()){
 					Api::response(200, array('Utilisateur ' .$fname. ' mis a jour'));
@@ -129,7 +114,7 @@ class UsersController{
 
 
 	public function deleteAllUsers(){
-		Api::right(2);
+		Perm::right(2);
 		global $bdd;
 		$query = $bdd->prepare('DELETE FROM users');
 		if($query->execute()){
@@ -139,12 +124,12 @@ class UsersController{
 
 
 	public function deleteUserbyID(){
-		$user = Api::findById('users', $param = F3::get('PARAMS.id'));
+		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
 
 		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
-  			Api::right(1);
+  			Perm::right(1);
   		}else{
-  			Api::right(2);
+  			Perm::right(2);
   		}
 
 		global $bdd;
@@ -155,6 +140,43 @@ class UsersController{
 		if($query->execute()){
 			Api::response(200, array('Utilisateur ' . $user['firstname'] . ' supprime'));
 		}
+	}
+
+
+
+
+
+	public function filmUserLike(){
+		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
+
+		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
+  			Perm::right(1);
+  		}else{
+  			Perm::right(2);
+  		}
+
+	}
+
+	public function filmUserWatched(){
+		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
+
+		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
+  			Perm::right(1);
+  		}else{
+  			Perm::right(2);
+  		}
+
+	}
+
+	public function filmUserWantToWatch(){
+		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
+
+		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
+  			Perm::right(1);
+  		}else{
+  			Perm::right(2);
+  		}
+
 	}
 
 

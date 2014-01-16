@@ -7,7 +7,7 @@ class FilmsController{
 	}
 
 	public function listAllFilms(){
-		Api::right(0);
+		Perm::right(0);
 
 		global $bdd;
 		$query = $bdd->query('SELECT * FROM films');
@@ -22,14 +22,14 @@ class FilmsController{
 
 
 	public function listFilmsByID(){
-		Api::right(0);
-		$film = Api::findById('films', $param = F3::get('PARAMS.id'));
+		Perm::right(0);
+		$film = Action::findById('films', $param = F3::get('PARAMS.id'));
 		Api:: response(400, array($film));
 	}
 
 
 	public function createFilm(){
-		Api::right(2);
+		Perm::right(2);
 
 		( isset($_POST['title']) ) 			?	$title 		 = $_POST['title'] 			:	Api::response(400, array('error' => 'Veuillez rentrer un titre')) ;
 		( isset($_POST['description']) ) 	?	$description = $_POST['description'] 	:	Api::response(400, array('error' => 'Veuillez rentrer une description')) ;
@@ -43,6 +43,7 @@ class FilmsController{
 				$query = $bdd->prepare('INSERT INTO films(title, description) VALUES(:title, :description)');
 				$query->bindParam(':title', 		$title, 		PDO::PARAM_STR);
 				$query->bindParam(':description', 	$description, 	PDO::PARAM_STR);
+
 				if($query->execute()){
 					Api::response(200, array('Film ' . $title . ' ajoute'));
 				}
@@ -54,8 +55,8 @@ class FilmsController{
 
 
 	public function updateFilm(){
-		Api::right(2);
-		$film = Api::findById('films', $param = F3::get('PARAMS.id'));
+		Perm::right(2);
+		$film = Action::findById('films', $param = F3::get('PARAMS.id'));
 		$data = Put::get();
 
 		$title 			=  (isset($data['title'])) 			? $data['title'] 		: $film['title'];
@@ -72,6 +73,7 @@ class FilmsController{
 				$query->bindParam(':title', 		$title, 		PDO::PARAM_STR);
 				$query->bindParam(':description', 	$description,	PDO::PARAM_STR);
 				$query->bindParam(':id', 			$filmId, 		PDO::PARAM_INT);
+
 				if($query->execute()){
 					Api::response(400, array('Film ' . $title . ' mis a jour '));
 				}
@@ -84,7 +86,7 @@ class FilmsController{
 
 
 	public function deleteAllFilms(){
-		Api::right(2);
+		Perm::right(2);
 
 		global $bdd;
 		$query = $bdd->prepare('DELETE FROM films');
@@ -95,8 +97,8 @@ class FilmsController{
 
 
 	public function deleteFilmsByID(){
-		Api::right(2);
-		$film = Api::findById('films', $param = F3::get('PARAMS.id'));
+		Perm::right(2);
+		$film = Action::findById('films', $param = F3::get('PARAMS.id'));
 
 		$filmId = $film['id'];
 		global $bdd;
@@ -106,5 +108,31 @@ class FilmsController{
 			Api::response(400, array('Film ' . $film['title'] . ' Supprime '));
 		}	
 	}
+
+
+
+
+
+
+	public function filmLike(){
+		Perm::right(1);
+		Action::filmsAction(1, 'like');
+	}
+
+
+	public function filmWatched(){
+		Perm::right(1);
+		Action::filmsAction(2, 'Watched');
+	}
+
+
+	public function filmWantToWatch(){
+		Perm::right(1);
+		Action::filmsAction(3, 'Want to Watch');
+	}
+
+
+
+
 
 }

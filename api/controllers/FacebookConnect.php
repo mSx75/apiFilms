@@ -2,6 +2,7 @@
 
 class FacebookConnect{
 
+
 	public static function login(){
 
 		require 'libs/facebook/facebook.php';
@@ -25,7 +26,7 @@ class FacebookConnect{
   		}else{
   			$info = $facebook->api('/me');
 
-  			$token = Api::tokenGenerator();
+  			$token = Perm::tokenGenerator();
   			$fname = $info['first_name'];
   			$lname = $info['last_name'];
   			$email = $info['email'];
@@ -33,7 +34,6 @@ class FacebookConnect{
   			global $bdd;
   			$query = $bdd->prepare('SELECT * FROM users WHERE email=?');
   			$query->execute(array($email));
-  			// $match = $query->fetchAll(PDO::FETCH_ASSOC);
 
   			if($match = $query->fetch(PDO::FETCH_ASSOC)){
                 Api::response(200, array('Vous etes connecte, Token de votre compte : ' . $match['token']));
@@ -48,10 +48,9 @@ class FacebookConnect{
                     Api::response(400, array('Votre compte a ete cree, Token de votre compte : ' . $token));
                 }
   			}
-
   		}
-
 	}
+
 
 }
 
