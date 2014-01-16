@@ -5,9 +5,21 @@ class Action{
 	public static function findById($table, $id){
 		global $bdd;
   		$query = $bdd->prepare('SELECT * FROM ' . $table . ' WHERE id=?');
-  		$query->execute(array($id));
+  		if($query->execute(array($id))){
+  			return $query->fetch(PDO::FETCH_ASSOC);
+  		}
+	}
 
-  		return $query->fetch(PDO::FETCH_ASSOC);
+
+
+	public static function sortById($table){
+		$sort = $_REQUEST['sort'];
+		$itemId = F3::get('PARAMS.id');
+		global $bdd;
+		$query = $bdd->prepare('SELECT ' .$sort. ' FROM ' .$table. ' WHERE id=?');
+		if($query->execute(array($itemId))){
+			return $query->fetch(PDO::FETCH_ASSOC);
+		}
 	}
 
 

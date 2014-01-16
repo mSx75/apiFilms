@@ -7,7 +7,6 @@ class UsersController{
 
 	}
 
-
 	public function listAllUsers(){
 		Perm::right(2);
 
@@ -15,8 +14,16 @@ class UsersController{
   		$query = $bdd->query('SELECT * FROM users');
 
   		if($query->execute()){
-  			$allUser = $query->fetchAll(PDO::FETCH_ASSOC);
-			Api::response(200, array($allUser));
+  			$allUsers = $query->fetchAll(PDO::FETCH_ASSOC);
+  			if(isset($_REQUEST['search'])){
+  				$search = $_REQUEST['search'];
+  				$like = '\'%' .$search. '%\'';
+  				$query = $bdd->prepare('SELECT * FROM users WHERE firstname LIKE '.$like.' OR name LIKE '.$like.' OR email LIKE '.$like);
+  				if($query->execute()){
+  					$allUsers = $query->fetchAll(PDO::FETCH_ASSOC);
+  				}
+  			}
+			Api::response(200, array($allUsers));
   		}else{
 			Api::response(400, array('error' => 'Erreur lors du chargement des donnees'));
 		}
@@ -25,6 +32,11 @@ class UsersController{
 
 	public function listUserbyID(){
 		Perm::rightSwitch($user = Action::findById('users', F3::get('PARAMS.id')));
+
+		if(isset($_REQUEST['sort'])){
+			$user = Action::sortById('users');
+		}
+
   		Api::response(200, array($user));
 	}
 

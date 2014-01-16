@@ -4,6 +4,7 @@ class FilmsController{
 
 
 	public function __construct(){
+
 	}
 
 	public function listAllFilms(){
@@ -14,7 +15,15 @@ class FilmsController{
 
 		if($query->execute()){
 			$allFilms = $query->fetchAll(PDO::FETCH_ASSOC);
-			Api::response(400, array($allFilms));
+			if(isset($_REQUEST['search'])){
+  				$search = $_REQUEST['search'];
+  				$like = '\'%' .$search. '%\'';
+  				$query = $bdd->prepare('SELECT * FROM films WHERE title LIKE '.$like.' OR description LIKE '.$like);
+  				if($query->execute()){
+  					$allFilms = $query->fetchAll(PDO::FETCH_ASSOC);
+  				}
+  			}
+			Api::response(200, array($allFilms));
 		}else{
 			Api::response(400, array('error' => 'Erreur lors du chargement des donnees'));
 		}
@@ -24,7 +33,12 @@ class FilmsController{
 	public function listFilmsByID(){
 		Perm::right(0);
 		$film = Action::findById('films', F3::get('PARAMS.id'));
-		Api:: response(400, array($film));
+
+		if(isset($_REQUEST['sort'])){
+			$film = Action::sortById('films');
+		}
+
+		Api:: response(200, array($film));
 	}
 
 
@@ -138,7 +152,7 @@ class FilmsController{
 	}
 
 
-	public function deleteFilmLike(){
+	public function deleteFilmWatched(){
 		Perm::right(1);
 		Action::deleteFilmsAction(2, 'Watched');
 	}
