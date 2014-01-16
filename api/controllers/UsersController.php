@@ -24,14 +24,7 @@ class UsersController{
 
 
 	public function listUserbyID(){
-  		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
-		
-  		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
-  			Perm::right(1);
-  		}else{
-  			Perm::right(2);
-  		}
-
+		Perm::rightSwitch($user = Action::findById('users', F3::get('PARAMS.id')));
   		Api::response(200, array($user));
 	}
 
@@ -66,19 +59,11 @@ class UsersController{
   		}else{
 			Api::response(400, array('error' => 'Erreur lors du chargement des donnees'));
   		}
-
 	}
 
 
 	public function updateUser(){
-		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
-
-		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
-  			Perm::right(1);
-  		}else{
-  			Perm::right(2);
-  		}
-
+		Perm::rightSwitch($user = Action::findById('users', $param = F3::get('PARAMS.id')));
 		$data = Put::get();
 
 		$fname 		= ( isset($data['firstname']) ) 	?	$data['firstname'] 	:	$user['firstname'];
@@ -108,8 +93,6 @@ class UsersController{
   		}else{
 			Api::response(400, array('error' => 'Erreur lors du chargement des donnees'));
   		}
-
-	
 	}
 
 
@@ -124,13 +107,7 @@ class UsersController{
 
 
 	public function deleteUserbyID(){
-		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
-
-		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
-  			Perm::right(1);
-  		}else{
-  			Perm::right(2);
-  		}
+		Perm::rightSwitch($user = Action::findById('users', F3::get('PARAMS.id')));
 
 		global $bdd;
 		$userId = $user['id'];
@@ -147,36 +124,15 @@ class UsersController{
 
 
 	public function filmUserLike(){
-		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
-
-		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
-  			Perm::right(1);
-  		}else{
-  			Perm::right(2);
-  		}
-
+		Action::listFilmsByUser(1);
 	}
 
 	public function filmUserWatched(){
-		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
-
-		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
-  			Perm::right(1);
-  		}else{
-  			Perm::right(2);
-  		}
-
+		Action::listFilmsByUser(2);
 	}
 
 	public function filmUserWantToWatch(){
-		$user = Action::findById('users', $param = F3::get('PARAMS.id'));
-
-		if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
-  			Perm::right(1);
-  		}else{
-  			Perm::right(2);
-  		}
-
+		Action::listFilmsByUser(3);
 	}
 
 

@@ -23,7 +23,7 @@ class FilmsController{
 
 	public function listFilmsByID(){
 		Perm::right(0);
-		$film = Action::findById('films', $param = F3::get('PARAMS.id'));
+		$film = Action::findById('films', F3::get('PARAMS.id'));
 		Api:: response(400, array($film));
 	}
 
@@ -56,7 +56,7 @@ class FilmsController{
 
 	public function updateFilm(){
 		Perm::right(2);
-		$film = Action::findById('films', $param = F3::get('PARAMS.id'));
+		$film = Action::findById('films', F3::get('PARAMS.id'));
 		$data = Put::get();
 
 		$title 			=  (isset($data['title'])) 			? $data['title'] 		: $film['title'];
@@ -98,7 +98,7 @@ class FilmsController{
 
 	public function deleteFilmsByID(){
 		Perm::right(2);
-		$film = Action::findById('films', $param = F3::get('PARAMS.id'));
+		$film = Action::findById('films', F3::get('PARAMS.id'));
 
 		$filmId = $film['id'];
 		global $bdd;
@@ -116,7 +116,7 @@ class FilmsController{
 
 	public function filmLike(){
 		Perm::right(1);
-		Action::filmsAction(1, 'like');
+		Action::filmsAction(1, 'Like');
 	}
 
 
@@ -132,6 +132,16 @@ class FilmsController{
 	}
 
 
+	public function deleteFilmLike(){
+		Perm::right(1);
+		Action::deleteFilmsAction(1, 'Like');
+	}
+
+
+	public function deleteFilmWantToWatch(){
+		Perm::right(1);
+		Action::deleteFilmsAction(3, 'Want to Watch');
+	}
 
 
 

@@ -38,6 +38,16 @@
 			return $myToken;
 		}
 
+
+		public static function rightSwitch($user){
+
+			if($user['token'] == $_REQUEST['token_access'] && $user['usergroup'] != 2){
+  				Perm::right(1);
+	  		}else{
+	  			Perm::right(2);
+	  		}
+		}
+
 	}
 
  ?>
