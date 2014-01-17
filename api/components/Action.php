@@ -81,7 +81,7 @@ class Action{
 							Api::response(200, array($filmTitle . ' a ete dis' . $type));
 						}
 					}else{
-						Api::response(400, array('Vous n avez pas' .$type. ' ' .$filmTitle));
+						Api::response(400, array('Vous n avez pas ' .$type. ' ' .$filmTitle));
 					}
 				}	
 			}	
