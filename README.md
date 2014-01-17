@@ -16,36 +16,66 @@ GET /v1/login
 > permission : *Admin*
 
 > Add parameters ?search=WORD on url for search on list of all User
-
 ```
 GET /v1/users
 ```
 
-**List Users by ID**
+**List User by ID**
 
-> permission : Admin can list all, UserLoged list own
+> permission : *Admin for all, UserLoged for own*
+
+> Add parameters ?sort=FIELD on url for sort field of User, separate by comma ',' if you want have more than one parameters
 ```
 GET /v1/users/@id
 ```
 
+**Film Liked by User**
+
+> permission : *Admin and UserLoged*
 ```
-GET /v1/dogs
+GET /v1/users/@id/liked
 ```
 
+**Film Watched by User**
+
+> permission : *Admin and UserLoged*
 ```
-GET /v1/dogs
+GET /v1/users/@id/watched
 ```
 
+**Film Wanted by User**
+
+> permission : *Admin and UserLoged*
 ```
-GET /v1/dogs
+GET /v1/users/@id/wanted
 ```
 
+**Create User**
+
+> permission : *Admin*
 ```
-GET /v1/dogs
+POST /v1/users
 ```
 
+**Update User**
+
+> permission : *Admin for all, UserLoged for own*
 ```
-GET /v1/dogs
+PUT /v1/users/@id
+```
+
+**Delete All Users**
+
+> permission : *Admin*
+```
+DELETE /v1/users
+```
+
+**Delete User by ID**
+
+> permission : *Admin for all, UserLoged for own*
+```
+DELETE /v1/users/@id
 ```
 
 ## Films
