@@ -22,4 +22,11 @@ $f3->route('GET /v1',
 	}
 );
 
+$f3->set('ONERROR',
+    function($f3) {
+        Api::response($f3->get('ERROR.code'));
+
+    }
+);
+
 $f3->run();

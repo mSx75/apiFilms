@@ -44,7 +44,7 @@ class UsersController{
 	public function createUser(){
 		Perm::right(2);
 
-		$tokenVerif = Api::tokenGenerator();
+		$tokenVerif = Perm::tokenGenerator();
   		( isset($_POST['firstname']) ) 	? $fname 		= $_POST['firstname'] 	: Api::response(400, array('error' => 'Veuillez rentrer un prenom')); 
   		( isset($_POST['name']) ) 		? $lname 		= $_POST['name'] 		: Api::response(400, array('error' => 'Veuillez rentrer un nom')); 
   		( isset($_POST['email']) ) 		? $email 		= $_POST['email'] 		: Api::response(400, array('error' => 'Veuillez rentrer un email')); 
