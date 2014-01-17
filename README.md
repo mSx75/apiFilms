@@ -1,7 +1,9 @@
 # apiFilm User guide
 
 ## Login
-> **Login with Facebook** 
+**Login with Facebook** 
+
+> permission : *All*
 
 > After your login, you receive a token, put this ?token_access=TOKEN after url
 ```
@@ -9,18 +11,19 @@ GET /v1/login
 ```
 
 ## Users
-> **List All Users**
+**List All Users**
 
 > permission : *Admin*
 
 > Add parameters ?search=WORD on url for search on list of all User
+
 ```
 GET /v1/users
 ```
 
-> **List Users by ID**
+**List Users by ID**
 
-> permission : Admin
+> permission : Admin can list all, UserLoged list own
 ```
 GET /v1/users/@id
 ```
