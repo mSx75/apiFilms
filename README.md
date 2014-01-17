@@ -13,9 +13,9 @@ GET /v1/login
 ## Users
 **List All Users**
 
-> permissions : **Admin**
+> permissions : *Admin*
 
-> Add parameters ?search=WORD on url for search on list of all User
+> Add parameters ?search=WORD on url for search on list of all Users
 ```
 GET /v1/users
 ```
@@ -79,3 +79,92 @@ DELETE /v1/users/@id
 ```
 
 ## Films
+
+**List All Films**
+
+> permissions : *Admin and UserLoged*
+
+> Add parameters ?search=WORD on url for search on list of all Films
+```
+GET /v1/films
+```
+
+**List Film by ID**
+
+> permissions : *Admin and UserLoged*
+
+> Add parameters ?sort=FIELD on url for sort field of User, separate by comma ',' if you want have more than one parameters
+```
+GET /v1/films/@id
+```
+
+**Create Film**
+
+> permissions : *Admin*
+```
+POST /v1/films
+```
+
+**Liked Film**
+
+> permissions : *Admin and UserLoged*
+```
+POST /v1/films/@id/liked
+```
+
+**Watched Film**
+
+> permissions : *Admin and UserLoged*
+```
+POST /v1/films/@id/watched
+```
+
+**Wanted Film**
+
+> permissions : *Admin and UserLoged*
+```
+POST /v1/films/@id/wanted
+```
+
+**Update Film**
+
+> permissions : *Admin*
+```
+PUT /v1/films/@id
+```
+
+**Delete All Films**
+
+> permissions : *Admin*
+```
+DELETE /v1/films
+```
+
+**Delete Film**
+
+> permissions : *Admin*
+```
+DELETE /v1/films/@id
+```
+
+**Delete Liked Film**
+
+> permissions : *Admin and UserLoged*
+```
+DELETE /v1/films/@id/liked
+```
+
+**Delete Watched Film**
+
+> permissions : *Admin and UserLoged*
+```
+DELETE /v1/films/@id/watched
+```
+
+**Delete Wanted Film**
+
+> permissions : *Admin and UserLoged*
+```
+DELETE /v1/films/@id/wanted
+```
+
